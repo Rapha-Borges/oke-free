@@ -6,9 +6,10 @@ Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes gere
 
 ### Criando uma conta gratuita na Oracle Cloud
 
-1. Todos terão acesso a um tenant individual para execução do lab. Para ativar o ambiente, acesse este [link e crie a sua conta.](https://signup.cloud.oracle.com/) 
+1. Todos terão acesso a um tenant individual para execução do lab. Para ativar o ambiente, acesse este [link e crie a sua conta.](https://signup.cloud.oracle.com/)
 
 IMPORTANTE:
+
 - No cadastro o País/Território será Brazil mas a Home Region do seu cadastro será "US East-Ashburn”.
 - Utilizem o mesmo e-mail que vocês usaram para se inscrever no evento, pois habilitamos uma oferta gratuita nesses e-mails. Caso já tenham uma conta OCI neste e-mail nos enviem um novo e-mail que habilitaremos outra oferta para vocês.
 - No cadastro não coloque o nome da empresa, pois ao colocar será necessário o CNPJ.
@@ -34,7 +35,7 @@ kubernetes_version = v1.26.7
 
 ### - Linux
 
-```
+```sh
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install terraform
@@ -52,7 +53,7 @@ sudo apt update && sudo apt install terraform
 
 1. Execute o comando de instalação:
 
-```
+```sh
 bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"
 ```
 
@@ -76,7 +77,7 @@ oci -v
 
 1. Execute o comando de configuração.
 
-```
+```sh
 oci session authenticate --region us-ashburn-1
 ```
 
@@ -84,19 +85,19 @@ oci session authenticate --region us-ashburn-1
 
 - Linux
 
-```
+```sh
 export OCI_CLI_AUTH=security_token
 ```
 
 - Windows
 
-```
+```sh
 set OCI_CLI_AUTH=security_token
 ```
 
 3. Verifique se a configuração foi realizada com sucesso.
 
-```
+```sh
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
@@ -104,51 +105,51 @@ oci session validate --config-file ~/.oci/config --profile DEFAULT --auth securi
 
 1. Clone o repositório.
 
-```
+```sh
 git clone https://github.com/Rapha-Borges/oke-free.git
 ```
 
 2. Dentro do diretório do projeto, gere a chave SSH e adicione o valor da chave pública na TF_VAR.
 
-```
+```sh
 ssh-keygen -t rsa -b 4096 -f id_rsa
 ```
 
-```
+```sh
 export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 ```
 
 3. Valide o tempo de vida do token de autenticação, aconselho que o tempo de vida seja maior que 30 minutos.
 
-```
+```sh
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
 Caso o token esteja próximo de expirar, faça o refresh do token e exporte novamente.
 
-```
+```sh
 oci session refresh --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
-```
+```sh
 export OCI_CLI_AUTH=security_token
 ```
 
 4. Inicialize o Terraform.
 
-```
+```sh
 terraform init
 ```
 
 5. Crie o cluster.
 
-```
+```sh
 terraform apply
 ```
 
 6. Acesse o cluster.
 
-```
+```sh
 kubectl get nodes
 ```
 
@@ -158,7 +159,7 @@ O cluster que criamos já conta com um Network Load Balancer configurado para ex
 
 O endereço do Load Balancer é informado na saída do Terraform, no formato `public_ip = "xxx.xxx.xxx.xxx"` e pode ser consultado a qualquer momento com o comando:
 
-```
+```sh
 terraform output public_ip
 ```
 
@@ -172,30 +173,31 @@ terraform destroy
 
 ## Problemas conhecidos
 
-- ### Se você tentar criar um cluster com uma conta gratuita e receber o erro abaixo:
+- ### Se você tentar criar um cluster com uma conta gratuita e receber o erro abaixo
 
 ```
 Error: Error creating cluster: clusters.clustersClient#CreateCluster: Failure sending request: StatusCode=400 -- Original Error: autorest/azure: Service returned an error. Status=<nil> Code="OutOfCapacity" Message="Out of capacity"
 ```
 
-As contas gratuitas tem um número limitado de instâncias disponíveis, possivelmente a região que você está tentando criar o cluster não tem mais instâncias disponíveis. Você pode tentar criar o cluster em outra região ou fazer o upgrade para uma conta `Pay As You Go`.Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade. 
+As contas gratuitas tem um número limitado de instâncias disponíveis, possivelmente a região que você está tentando criar o cluster não tem mais instâncias disponíveis. Você pode tentar criar o cluster em outra região ou fazer o upgrade para uma conta `Pay As You Go`.Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
-- ### Erro `401-NotAuthenticated` ou o comando `kubectl` não funciona. Isso ocorre porque o token de autenticação expirou.
+- ### Erro `401-NotAuthenticated` ou o comando `kubectl` não funciona. Isso ocorre porque o token de autenticação expirou
 
 Gere um novo token de autenticação e exporte para a variável de ambiente `OCI_CLI_AUTH`.
 
-```
+```sh
 oci session authenticate --region us-ashburn-1
 ```
 
-* Linux
-```
+- Linux
+
+```sh
 export OCI_CLI_AUTH=security_token
-```	
-
-* Windows
-
 ```
+
+- Windows
+
+```sh
 set OCI_CLI_AUTH=security_token
 ```
 
