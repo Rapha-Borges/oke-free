@@ -44,6 +44,18 @@ sudo apt update && sudo apt install terraform
 
 2. Adicione o diretório ao [PATH do Windows](https://www.java.com/pt-BR/download/help/path_pt-br.html).
 
+### - OS X (Mac)
+
+1. Utilize [Homebrew](https://brew.sh/), instalando-o e depois adicionando o Terraform por ele:
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+```
+brew tap hashicorp/tap && brew install hashicorp/tap/terraform
+```
+
 ## Baixando e configurando o OCI CLI
 
 ### - Linux
@@ -69,6 +81,14 @@ oci -v
 1. Faça download do instalador MSI da CLI do OCI para Windows no GitHub [Releases](https://github.com/oracle/oci-cli/releases)
 
 2. Execute o instalador e siga as instruções.
+
+### - OS X (Mac)
+
+1. Continue utilizando o Homebrew:
+
+```
+brew update && brew install oci-cli
+```
 
 ## Configurando o OCI CLI
 
