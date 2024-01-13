@@ -140,13 +140,19 @@ export OCI_CLI_AUTH=security_token
 terraform init
 ```
 
-5. Crie o cluster.
+5. Crie o plan.
 
 ```
-terraform apply
+ terraform plan -out=oci.tfplan
 ```
 
-6. Acesse o cluster.
+6. Crie o cluster.
+
+```
+terraform apply "oci.tf.plan"
+```
+
+7. Acesse o cluster.
 
 ```
 kubectl get nodes
