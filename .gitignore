@@ -1,0 +1,19 @@
+# Ignore Terraform state files
+*.tfstate*
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+
+
+# Ignore .terraform directory
+.terraform/
+
+# Ignore any generated files or directories
+*.tfvars
+*.tfvars.json
+*.tfvars.tf
+*.tfvars.tf.json
+terraform.tfstate*
+
+# Ignore SSH keys
+id_rsa*
