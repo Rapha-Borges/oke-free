@@ -19,9 +19,6 @@ variable "ocpus_per_node" {
 variable "image_id" {
 }
 
-variable "availability_domain" {
-}
-
 variable "ssh_public_key" {
 }
 

@@ -33,7 +33,15 @@ resource "oci_containerengine_node_pool" "k8s_node_pool" {
   name               = "k8s-node-pool"
   node_config_details {
     placement_configs {
-      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[var.availability_domain].name
+      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
+      subnet_id           = var.vcn_private_subnet_id
+    }
+    placement_configs {
+      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[1].name
+      subnet_id           = var.vcn_private_subnet_id
+    }
+    placement_configs {
+      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[2].name
       subnet_id           = var.vcn_private_subnet_id
     }
     size = var.node_size

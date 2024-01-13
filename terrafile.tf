@@ -41,7 +41,6 @@ module "cluster" {
   memory_in_gbs_per_node            = var.memory_in_gbs_per_node
   ocpus_per_node                    = var.ocpus_per_node
   image_id                          = var.image_id
-  availability_domain               = var.availability_domain
   ssh_public_key                    = var.ssh_public_key
   public_subnet_id                  = module.network.public_subnet_id
   vcn_id                            = module.vcn.vcn_id

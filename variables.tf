@@ -10,11 +10,6 @@ variable "region" {
   default = "us-ashburn-1"  
 }
 
-variable "availability_domain" {
-  type    = number
-  default = 0
-}
-
 # ---------->VM's----------
 
 variable "shape" {
