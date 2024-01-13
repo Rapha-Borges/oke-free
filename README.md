@@ -23,9 +23,11 @@ shape = VM.Standard.E3.Flex
 
 memory_in_gbs_per_node = 1
 
-image_id = ocid1.image.oc1.iad.aaaaaaaazi34xyxv6og7qgn3nqvaykfvg5ntkkx7yhlkjzpn4z45l72l53wa
+image_id = ocid1.image.oc1.iad.aaaaaaaab2z4tdx4ozceelvzjzvvugwyavhco7mjuq44ejszrvw4yhz4za5a
 
 node_size = 1
+
+kubernetes_version = v1.26.7
 ```
 
 ## Instalando o Terraform
@@ -103,7 +105,7 @@ oci session validate --config-file ~/.oci/config --profile DEFAULT --auth securi
 1. Clone o repositório.
 
 ```
-git clone https://github.com/Rapha-Borges/oci-k8s.git
+git clone https://github.com/Rapha-Borges/oke-free.git
 ```
 
 2. Dentro do diretório do projeto, gere a chave SSH e adicione o valor da chave pública na TF_VAR.
