@@ -20,7 +20,12 @@ t_plan(){
 # terraform apply to cluster handler
 t_apply(){
      terraform apply -auto-approve &> output-gen-apply
+     if [[ $? -eq 0 ]]; then
+        echo "apply with sucess"
+        exit 0;
+     fi
      check_error_handler "CompartmentAlreadyExist" "Verifique se já existe compartment, exclua, espere e retente." output-gen-apply
+     
 }
 
 # ssh_handler
