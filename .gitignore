@@ -19,4 +19,5 @@ terraform.tfstate*
 id_rsa*
 
 # Ignore output shell
-output-gen
+output-gen*
+tfplan

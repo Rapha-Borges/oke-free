@@ -1,28 +1,5 @@
 #!/usr/bin/env bash
 
-# ssh_handler
-# generating and export var
-ssh_handler(){
-    if ! [[ -f id_rsa.pub ]]; then
-        echo "generating rsa key"
-        ssh-keygen -t rsa -b 4096 -f id_rsa
-    fi
-}
-
-# check_error
-# handler error
-check_error(){
-    err=$1
-    message=$2
-
-    grep $err output-gen
-    if [[ $? -eq 0 ]]; then
-        echo
-        echo "$message";
-        exit -1;
-    fi
-}
-
 # t_init
 # terraform init
 t_init(){
@@ -33,11 +10,41 @@ t_init(){
 }
 
 # t_plan
-# verify errors and suggest some action to solve it
+# verify errors and suggest some action to solve it.
 t_plan(){
-    terraform plan -out=tfplan &> output-gen
-    check_error "401-NotAuthenticated" "Verifique se está logado. Execute: oci session authenticate --region us-ashburn-1"
-    check_error "Error Code: CompartmentAlreadyExists" "Verifique se já existe compartment, exclua, espere e retente."
+    terraform plan -out=tfplan &> output-gen-plan
+    check_error_handler "401-NotAuthenticated" "Verifique se está logado. Execute: oci session authenticate --region us-ashburn-1" output-gen-plan
+}
+
+# t_apply
+# terraform apply to cluster handler
+t_apply(){
+     terraform apply -auto-approve &> output-gen-apply
+     check_error_handler "CompartmentAlreadyExist" "Verifique se já existe compartment, exclua, espere e retente." output-gen-apply
+}
+
+# ssh_handler
+# generating and export var
+ssh_handler(){
+    if ! [[ -f id_rsa.pub ]]; then
+        echo "generating rsa key"
+        ssh-keygen -t rsa -b 4096 -f id_rsa
+    fi
+}
+
+# check_error_handler
+# handler error
+check_error_handler(){
+    err="$1"
+    message="$2"
+    file=$3
+
+    grep $err $file
+    if [[ $? -eq 0 ]]; then
+        echo
+        echo "$message";
+        exit -1;
+    fi
 }
 
 # t_retry_apply
@@ -48,12 +55,7 @@ t_retry_apply(){
 
     while [[ true ]]; do
         t_plan
-
-        terraform apply -auto-approve
-        if [[ $? -eq 0 ]]; then
-            echo "applied with success!";
-            exit 0;
-        fi
+        t_apply
 
         echo "retry terraform apply... retrying in " $retry_sleep " seconds"
         sleep $retry_sleep
