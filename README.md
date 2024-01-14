@@ -16,6 +16,33 @@ IMPORTANTE:
 - No cadastro não coloque o nome da empresa, pois ao colocar será necessário o CNPJ.
 - Se você já tiver um trial (acesso a nuvem da Oracle) ativo nesse email, você irá conseguir realizar o lab pois serão utilizados recursos always free, porém não terá os 500 dólares sem cartão pois um valor de testes já foi disponibilizado nos 30 dias da ativação.
 
+## Instalando seu Kubectl | Kubernetes 1.26.7 | GNU/Linux 
+
+Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita na variáveis do terraform. Veja [variables.tf](variables.tf)
+
+1. Baixando o binário kubectl
+
+```
+curl -LO https://dl.k8s.io/release/v1.26.7/bin/linux/amd64/kubectl
+```
+
+2. Instalando o binário
+
+```
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+3. Valide a versão
+
+```
+kubectl version --client
+```
+
+- *Note: O comando acima irá gerar um aviso:*
+    "WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short."
+
+**Você pode ignorar este aviso. Você está apenas verificando a versão do kubectl que instalou.**
+
 ### Variáveis do Terraform personalizadas para o lab
 
 Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lemre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
