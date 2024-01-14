@@ -39,7 +39,7 @@ kubernetes_version = v1.26.7
 
 ### - Linux
 
-```
+```sh
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install terraform
@@ -57,7 +57,7 @@ sudo apt update && sudo apt install terraform
 
 1. Execute o comando de instalação:
 
-```
+```sh
 bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh)"
 ```
 
@@ -67,7 +67,7 @@ bash -c "$(curl -L https://raw.githubusercontent.com/oracle/oci-cli/master/scrip
 
 4. Verifique a instalação.
 
-```
+```sh
 oci -v
 ```
 
@@ -81,7 +81,7 @@ oci -v
 
 1. Execute o comando de configuração.
 
-```
+```sh
 oci session authenticate --region us-ashburn-1
 ```
 
@@ -89,19 +89,19 @@ oci session authenticate --region us-ashburn-1
 
 - Linux
 
-```
+```sh
 export OCI_CLI_AUTH=security_token
 ```
 
 - Windows
 
-```
+```sh
 set OCI_CLI_AUTH=security_token
 ```
 
 3. Verifique se a configuração foi realizada com sucesso.
 
-```
+```sh
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
@@ -119,51 +119,51 @@ helper para criação do oke cluster:
 
 1. Clone o repositório.
 
-```
+```sh
 git clone https://github.com/Rapha-Borges/oke-free.git
 ```
 
 2. Dentro do diretório do projeto, gere a chave SSH e adicione o valor da chave pública na TF_VAR.
 
-```
+```sh
 ssh-keygen -t rsa -b 4096 -f id_rsa
 ```
 
-```
+```sh
 export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 ```
 
 3. Valide o tempo de vida do token de autenticação, aconselho que o tempo de vida seja maior que 30 minutos.
 
-```
+```sh
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
 Caso o token esteja próximo de expirar, faça o refresh do token e exporte novamente.
 
-```
+```sh
 oci session refresh --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
-```
+```sh
 export OCI_CLI_AUTH=security_token
 ```
 
 4. Inicialize o Terraform.
 
-```
+```sh
 terraform init
 ```
 
 5. Crie o cluster.
 
-```
+```sh
 terraform apply
 ```
 
 6. Acesse o cluster.
 
-```
+```sh
 kubectl get nodes
 ```
 
@@ -173,7 +173,7 @@ O cluster que criamos já conta com um Network Load Balancer configurado para ex
 
 O endereço do Load Balancer é informado na saída do Terraform, no formato `public_ip = "xxx.xxx.xxx.xxx"` e pode ser consultado a qualquer momento com o comando:
 
-```
+```sh
 terraform output public_ip
 ```
 
@@ -181,7 +181,7 @@ terraform output public_ip
 
 1. Para deletar o cluster bastar executar o comando:
 
-```
+```sh
 terraform destroy
 ```
 
@@ -199,19 +199,19 @@ As contas gratuitas tem um número limitado de instâncias disponíveis, possive
 
 Gere um novo token de autenticação e exporte para a variável de ambiente `OCI_CLI_AUTH`.
 
-```
+```sh
 oci session authenticate --region us-ashburn-1
 ```
 
 - Linux
 
-```
+```sh
 export OCI_CLI_AUTH=security_token
 ```
 
 - Windows
 
-```
+```sh
 set OCI_CLI_AUTH=security_token
 ```
 
@@ -219,13 +219,11 @@ set OCI_CLI_AUTH=security_token
 
 Para resolver esse problema, basta deletar os recursos manualmente no console da OCI. Seguindo a ordem abaixo:
 
-```
-[Kubernetes Cluster](https://cloud.oracle.com/containers/clusters)
-[Virtual Cloud Networks](https://cloud.oracle.com/networking/vcns)
-[Compartments](https://cloud.oracle.com/identity/compartments)
+- [Kubernetes Cluster](https://cloud.oracle.com/containers/clusters)
+- [Virtual Cloud Networks](https://cloud.oracle.com/networking/vcns)
+- [Compartments](https://cloud.oracle.com/identity/compartments)
 
 Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
-```
 
 # Referências
 
