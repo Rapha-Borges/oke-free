@@ -8,9 +8,10 @@ Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes usan
 
 ### Criando uma conta gratuita na Oracle Cloud
 
-1. Todos terão acesso a um tenant individual para execução do lab. Para ativar o ambiente, acesse este [link e crie a sua conta.](https://signup.cloud.oracle.com/) 
+1. Todos terão acesso a um tenant individual para execução do lab. Para ativar o ambiente, acesse este [link e crie a sua conta.](https://signup.cloud.oracle.com/)
 
 IMPORTANTE:
+
 - No cadastro o País/Território será Brazil mas a Home Region do seu cadastro será "US East-Ashburn”.
 - Utilizem o mesmo e-mail que vocês usaram para se inscrever no evento, pois habilitamos uma oferta gratuita nesses e-mails. Caso já tenham uma conta OCI neste e-mail nos enviem um novo e-mail que habilitaremos outra oferta para vocês.
 - No cadastro não coloque o nome da empresa, pois ao colocar será necessário o CNPJ.
@@ -106,6 +107,16 @@ oci session validate --config-file ~/.oci/config --profile DEFAULT --auth securi
 
 ## Criando o cluster
 
+### CLI
+
+helper para criação do oke cluster:
+
+````sh
+./main.sh
+````
+
+### Manual
+
 1. Clone o repositório.
 
 ```
@@ -176,7 +187,7 @@ terraform destroy
 
 ## Problemas conhecidos
 
-- ### Se você tentar criar um cluster com uma conta gratuita e receber o erro abaixo:
+- ### Se você tentar criar um cluster com uma conta gratuita e receber o erro abaixo
 
 ```
 Error: "Out of capacity" ou "Out of host capacity"
@@ -184,7 +195,7 @@ Error: "Out of capacity" ou "Out of host capacity"
 
 As contas gratuitas tem um número limitado de instâncias disponíveis, possivelmente a região que você está tentando criar o cluster não tem mais instâncias disponíveis. Você pode esperar até que novas instâncias fiquem disponíveis ou tentar criar o cluster em outra região. Além disso, o upgrade para uma conta `Pay As You Go` pode resolver o problema, pois as contas `Pay As You Go` tem um número maior de instâncias disponíveis. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
-- ### Erro `401-NotAuthenticated` ou o comando `kubectl` não funciona. Isso ocorre porque o token de autenticação expirou.
+- ### Erro `401-NotAuthenticated` ou o comando `kubectl` não funciona. Isso ocorre porque o token de autenticação expirou
 
 Gere um novo token de autenticação e exporte para a variável de ambiente `OCI_CLI_AUTH`.
 
@@ -192,18 +203,19 @@ Gere um novo token de autenticação e exporte para a variável de ambiente `OCI
 oci session authenticate --region us-ashburn-1
 ```
 
-* Linux
+- Linux
+
 ```
 export OCI_CLI_AUTH=security_token
-```	
+```
 
-* Windows
+- Windows
 
 ```
 set OCI_CLI_AUTH=security_token
 ```
 
-- ### Erros devido a falha na execução do `terraform destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `terraform destroy`.
+- ### Erros devido a falha na execução do `terraform destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `terraform destroy`
 
 Para resolver esse problema, basta deletar os recursos manualmente no console da OCI. Seguindo a ordem abaixo:
 
