@@ -62,10 +62,10 @@ t_retry_apply(){
     while [[ true ]]; do
         t_plan
         t_apply
-        refresh_token
 
         echo "retry terraform apply... retrying in " $retry_sleep " seconds"
         sleep $retry_sleep
+        refresh_token
     done
 }
 
