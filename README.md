@@ -111,9 +111,15 @@ oci session validate --config-file ~/.oci/config --profile DEFAULT --auth securi
 
 helper para criação do oke cluster:
 
-````sh
+```sh
 ./main.sh
-````
+```
+
+For debug:
+
+```sh
+tail -f output-gen*
+```
 
 ### Manual
 

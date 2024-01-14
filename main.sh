@@ -12,6 +12,7 @@ t_init(){
 # t_plan
 # verify errors and suggest some action to solve it.
 t_plan(){
+    echo terraform plan - initialized
     terraform plan -out=tfplan &> output-gen-plan
     check_error_handler "401-NotAuthenticated" "Verifique se está logado. Execute: oci session authenticate --region us-ashburn-1" output-gen-plan
 }
@@ -19,12 +20,13 @@ t_plan(){
 # t_apply
 # terraform apply to cluster handler
 t_apply(){
-     terraform apply -auto-approve &> output-gen-apply
-     if [[ $? -eq 0 ]]; then
-        echo "apply with sucess"
+    echo terraform apply - initialized
+    terraform apply -auto-approve &> output-gen-apply
+    if [[ $? -eq 0 ]]; then
+        echo "terraform apply with success"
         exit 0;
-     fi
-     check_error_handler "CompartmentAlreadyExist" "Verifique se já existe compartment, exclua, espere e retente." output-gen-apply
+    fi
+    check_error_handler "CompartmentAlreadyExist" "Verifique se já existe compartment, exclua, espere e retente." output-gen-apply
 }
 
 # ssh_handler
@@ -60,7 +62,6 @@ refresh_token(){
 # t_retry_apply
 # retry apply terraform until succeded
 t_retry_apply(){
-    echo terraform apply - execution
     retry_sleep=10;
 
     while [[ true ]]; do
