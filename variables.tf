@@ -42,7 +42,7 @@ variable "k8s_version" {
 
 variable "node_size" {
   type    = string
-  default = "3"
+  default = "1"
 }
 
 variable "cluster_name" {
@@ -54,12 +54,12 @@ variable "cluster_name" {
 
 variable "vcn_name" {
   type    = string
-  default = "k8s-vcn"  
+  default = "k8s-vcn"
 }
 
 variable "vcn_dns_label" {
   type    = string
-  default = "k8svcn"  
+  default = "k8svcn"
 }
 
 # ----------> Load Balancer <----------
