@@ -47,6 +47,12 @@ check_error_handler(){
     fi
 }
 
+# refresh_token
+# to keep alive auth
+refresh_token(){
+    oci session refresh --config-file ~/.oci/config --profile DEFAULT --auth security_token
+}
+
 # t_retry_apply
 # retry apply terraform until succeded
 t_retry_apply(){
@@ -56,6 +62,7 @@ t_retry_apply(){
     while [[ true ]]; do
         t_plan
         t_apply
+        refresh_token
 
         echo "retry terraform apply... retrying in " $retry_sleep " seconds"
         sleep $retry_sleep
@@ -70,6 +77,7 @@ main (){
 }
 
 # vars
+export OCI_CLI_AUTH=security_token
 export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 
 main
