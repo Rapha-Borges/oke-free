@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+oci_auth_cmd="oci session authenticate --region us-ashburn-1 --profile-name DEFAULT"
+oci_session_validate_cmd="oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token --local 2>&1 | awk '{print \$5,\$6}'"
+oci_session_refresh_cmd="oci session refresh --config-file ~/.oci/config --profile DEFAULT --auth security_token"
+
 # t_init
 # terraform init
 t_init(){
@@ -14,7 +18,7 @@ t_init(){
 t_plan(){
     echo terraform plan - initialized
     terraform plan -out=tfplan &> output-gen-plan
-    check_error_handler "401-NotAuthenticated" "Verifique se está logado. Execute: oci session authenticate --region us-ashburn-1" output-gen-plan
+    check_error_handler "401-NotAuthenticated" "Executando comand: $oci_auth_cmd" output-gen-plan "$oci_auth_cmd"
 }
 
 # t_apply
@@ -23,7 +27,9 @@ t_apply(){
     echo terraform apply - initialized
     terraform apply -auto-approve &> output-gen-apply
     if [[ $? -eq 0 ]]; then
-        echo "terraform apply with success"
+        echo -e "terraform apply with success\n"
+        cat output-gen-apply
+        rm -f output-gen-apply
         exit 0;
     fi
     check_error_handler "CompartmentAlreadyExist" "Verifique se já existe compartment, exclua, espere e retente." output-gen-apply
@@ -44,19 +50,36 @@ check_error_handler(){
     err="$1"
     message="$2"
     file=$3
+    callback_cmd=$4
 
-    grep $err $file
-    if [[ $? -eq 0 ]]; then
-        echo
-        echo "$message";
-        exit -1;
+    grep $err $file | uniq
+    if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+        echo -e "\n$message\n";
+        rm -f $file
+        [ -n "$callback_cmd" ] && eval $callback_cmd || exit -1;
     fi
+}
+
+# oci_auth
+# oci session authenticate
+oci_auth(){
+    region=${1:-us-ashburn-1}
+    profile_name=${$2:-DEFAULT}
+    extra_args=$3
+    oci session authenticate --region $region --profile-name $profile_name $extra_args
 }
 
 # refresh_token
 # to keep alive auth
 refresh_token(){
-    oci session refresh --config-file ~/.oci/config --profile DEFAULT --auth security_token
+    oci_session_timestamp=$(date -d "$(eval $oci_session_validate_cmd)" +%s)
+    current_timestamp=$(date +%s)
+    timestamp_diff=$(( oci_session_timestamp - current_timestamp ))
+
+    # Run the oci session auth command if the session has expired.
+    [ $timestamp_diff -le 0 ] && $oci_auth_cmd
+    # Run the oci session refresh command if the session has 5 minutes or less to expire.
+    [ $timestamp_diff -le 300 ] && $oci_session_refresh_cmd
 }
 
 # t_retry_apply
