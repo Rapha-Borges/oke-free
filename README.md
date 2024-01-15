@@ -1,8 +1,10 @@
-# Criando um Cluster Kubernetes na OCI usando Terraform
+# Criando um Cluster Kubernetes na OCI usando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
-Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes gerenciado (OKE) usando o Terraform de forma simples e rápida.
+### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
 
-## Oferta Especial #MêsDoKubernetes
+Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes usando o Terraform de forma simples e rápida.
+
+## Oferta Especial [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 ### Criando uma conta gratuita na Oracle Cloud
 
@@ -14,20 +16,22 @@ IMPORTANTE:
 - No cadastro não coloque o nome da empresa, pois ao colocar será necessário o CNPJ.
 - Se você já tiver um trial (acesso a nuvem da Oracle) ativo nesse email, você irá conseguir realizar o lab pois serão utilizados recursos always free, porém não terá os 500 dólares sem cartão pois um valor de testes já foi disponibilizado nos 30 dias da ativação.
 
-### Variáveis de ambiente personalizadas para o lab
+### Variáveis do Terraform personalizadas para o lab
+
+Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lemre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
 
 ```
 region = us-ashburn-1
 
 shape = VM.Standard.E3.Flex
 
-memory_in_gbs_per_node = 1
+memory_in_gbs_per_node = 2
 
-image_id = ocid1.image.oc1.iad.aaaaaaaab2z4tdx4ozceelvzjzvvugwyavhco7mjuq44ejszrvw4yhz4za5a
+image_id = ocid1.image.oc1.iad.aaaaaaaanwsto6tqklfuawgqrve5ugjpbff3l5qtb7bs35dp72ewcnsuwoka
 
 node_size = 1
 
-kubernetes_version = v1.26.7
+kubernetes_version = v1.28.2
 ```
 
 ## Instalando o Terraform
@@ -181,10 +185,10 @@ terraform destroy
 - ### Se você tentar criar um cluster com uma conta gratuita e receber o erro abaixo:
 
 ```
-Error: Error creating cluster: clusters.clustersClient#CreateCluster: Failure sending request: StatusCode=400 -- Original Error: autorest/azure: Service returned an error. Status=<nil> Code="OutOfCapacity" Message="Out of capacity"
+Error: "Out of capacity" ou "Out of host capacity"
 ```
 
-As contas gratuitas tem um número limitado de instâncias disponíveis, possivelmente a região que você está tentando criar o cluster não tem mais instâncias disponíveis. Você pode tentar criar o cluster em outra região ou fazer o upgrade para uma conta `Pay As You Go`.Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade. 
+As contas gratuitas tem um número limitado de instâncias disponíveis, possivelmente a região que você está tentando criar o cluster não tem mais instâncias disponíveis. Você pode esperar até que novas instâncias fiquem disponíveis ou tentar criar o cluster em outra região. Além disso, o upgrade para uma conta `Pay As You Go` pode resolver o problema, pois as contas `Pay As You Go` tem um número maior de instâncias disponíveis. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
 - ### Erro `401-NotAuthenticated` ou o comando `kubectl` não funciona. Isso ocorre porque o token de autenticação expirou.
 
@@ -203,6 +207,18 @@ export OCI_CLI_AUTH=security_token
 
 ```
 set OCI_CLI_AUTH=security_token
+```
+
+- ### Erros devido a falha na execução do `terraform destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `terraform destroy`.
+
+Para resolver esse problema, basta deletar os recursos manualmente no console da OCI. Seguindo a ordem abaixo:
+
+```
+[Kubernetes Cluster](https://cloud.oracle.com/containers/clusters)
+[Virtual Cloud Networks](https://cloud.oracle.com/networking/vcns)
+[Compartments](https://cloud.oracle.com/identity/compartments)
+
+Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
 ```
 
 # Referências
