@@ -1,8 +1,8 @@
 # ----------> Compartment <----------
 
 variable "compartment_name" {
-  type    = string
-  default = "k8s"
+ type    = string
+ default = "k8s"
 }
 
 variable "region" {
@@ -27,9 +27,12 @@ variable "memory_in_gbs_per_node" {
   default = 6
 }
 
+variable "node_linux_version" {
+  default = "8.8"
+}
+
 variable "image_id" {
-  type    = string
-  default = "ocid1.image.oc1.iad.aaaaaaaao2zpwcb2osmbtliiuzlphc3y2fqaqmcpp5ttlcf573sidkabml7a"
+  description = "Entre com o OCID da imagem, caso não queria deixe em branco pode completar automaticamente"
 }
 # Link to a list of available images (Be sure to select the correct region and CPU architecture. We are using Oracle-Linux-8.8-aarch64-2023.09.26-0-OKE-1.28.2-653)
 # https://docs.cloud.oracle.com/iaas/images/

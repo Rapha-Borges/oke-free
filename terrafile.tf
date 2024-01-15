@@ -45,6 +45,8 @@ module "cluster" {
   public_subnet_id                  = module.network.public_subnet_id
   vcn_id                            = module.vcn.vcn_id
   vcn_private_subnet_id             = module.network.vcn_private_subnet_id
+  node_linux_version                = var.node_linux_version    
+  
 }
 
 module "loadbalancer" {

@@ -33,3 +33,5 @@ variable "compartment_id" {
 
 variable "vcn_private_subnet_id" {
 }
+variable "node_linux_version" {
+}
