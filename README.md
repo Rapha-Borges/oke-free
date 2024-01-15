@@ -52,13 +52,13 @@ region = us-ashburn-1
 
 shape = VM.Standard.E3.Flex
 
-memory_in_gbs_per_node = 1
+memory_in_gbs_per_node = 2
 
-image_id = ocid1.image.oc1.iad.aaaaaaaab2z4tdx4ozceelvzjzvvugwyavhco7mjuq44ejszrvw4yhz4za5a
+image_id = ocid1.image.oc1.iad.aaaaaaaanwsto6tqklfuawgqrve5ugjpbff3l5qtb7bs35dp72ewcnsuwoka
 
 node_size = 1
 
-kubernetes_version = v1.26.7
+kubernetes_version = v1.28.2
 ```
 
 ## Instalando o Terraform
