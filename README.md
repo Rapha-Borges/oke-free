@@ -154,11 +154,11 @@ kubectl version --client --output=yaml
 
 ## Criando o cluster
 
-### CLI
+### Script para criação do cluster
 
-helper para criação do oke cluster.
+Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
 
-> disclaimer executa somente no linux, use por sua conta e risco. :trollface:
+Atenção: O script está em fase de testes e funciona apenas no Linux.
 
 ```sh
 ./main.sh
