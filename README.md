@@ -122,6 +122,13 @@ ssh-keygen -t rsa -b 4096 -f id_rsa
 export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 ```
 
+- Windows
+
+```
+set /p TF_VAR_ssh_public_key=<id_rsa.pub
+```
+
+
 3. Valide o tempo de vida do token de autenticação, aconselho que o tempo de vida seja maior que 30 minutos.
 
 ```
