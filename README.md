@@ -33,6 +33,57 @@ node_size = 1
 
 kubernetes_version = v1.28.2
 ```
+## instalando kubectl
+
+### - Linux
+# ArchLinux/Manjaro e derivados
+```
+sudo pacman -Sy kubectl
+```
+
+# Debian/Ubuntu e derivados
+```
+sudo apt update && sudo apt-get install -y apt-transport-https ca-certificates curl
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt update
+
+sudo apt install -y kubectl
+```
+
+# RedHat/Fedora e derivados
+```
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+EOF
+
+sudo yum install -y kubectl
+```
+# Outros Linux
+```
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+chmod +x kubectl
+
+mkdir -p ~/.local/bin
+
+mv ./kubectl ~/.local/bin/kubectl
+```
+
+# Verificar se foi instalado corretamente:
+```
+kubectl version --client
+```
+
 
 ## Instalando o Terraform
 
