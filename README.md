@@ -121,8 +121,13 @@ curl -LO https://dl.k8s.io/release/v1.28.2/bin/linux/amd64/kubectl
 ```
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 ```
+3. Adicione kubectl completion bash
 
-3. Valide a versão
+```
+echo '
+source <(kubectl completion bash)' >> ~/.bashrc
+```  
+4. Valide a versão
 
 ```
 kubectl version --client
