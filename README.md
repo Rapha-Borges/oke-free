@@ -118,6 +118,8 @@ git clone https://github.com/Rapha-Borges/oke-free.git
 ssh-keygen -t rsa -b 4096 -f id_rsa
 ```
 
+- Linux
+
 ```
 export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 ```
