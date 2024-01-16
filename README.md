@@ -154,7 +154,7 @@ terraform apply
 
 ```
 terraform plan -out=oci.tfplan
-terraform apply "oci.tf.plan" -auto-approve
+terraform apply "oci.tfplan" -auto-approve
 ```
 
 6. Acesse o cluster.
