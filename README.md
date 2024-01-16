@@ -156,16 +156,12 @@ kubectl version --client --output=yaml
 
 ### CLI
 
-helper para criação do oke cluster:
+helper para criação do oke cluster.
+
+> disclaimer executa somente no linux, use por sua conta e risco. :trollface:
 
 ```sh
 ./main.sh
-```
-
-For debug:
-
-```sh
-tail -f output-gen*
 ```
 
 ### Manual
@@ -193,7 +189,6 @@ export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 ```
 set /p TF_VAR_ssh_public_key=<id_rsa.pub
 ```
-
 
 3. Valide o tempo de vida do token de autenticação, aconselho que o tempo de vida seja maior que 30 minutos.
 
@@ -223,7 +218,7 @@ terraform init
 terraform apply
 ```
 
-  - OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
+- OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
 
 ```
 terraform plan -out=oci.tfplan
