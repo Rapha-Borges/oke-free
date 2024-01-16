@@ -104,7 +104,7 @@ set OCI_CLI_AUTH=security_token
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
-## Instalando seu Kubectl | Kubernetes 1.26.7 |
+## Instalando seu Kubectl | Kubernetes 1.28.2 |
 
 ### GNU/Linux
 
@@ -113,7 +113,7 @@ Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usa
 1. Baixando o binário kubectl
 
 ```
-curl -LO https://dl.k8s.io/release/v1.26.7/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/release/v1.28.2/bin/linux/amd64/kubectl
 ```
 
 2. Instalando o binário
@@ -138,7 +138,7 @@ kubectl version --client
 1. Baixe o binário kubectl
 
 ```
-curl.exe -LO "https://dl.k8s.io/release/v1.26.7/bin/windows/amd64/kubectl.exe"
+curl.exe -LO "https://dl.k8s.io/release/v1.28.2/bin/windows/amd64/kubectl.exe"
 ```
 
 2. **Anexe a pasta binária kubectl à sua variável de ambiente PATH.**
