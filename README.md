@@ -1,10 +1,10 @@
-# Criando um Cluster Kubernetes na OCI usando Terraform #MêsDoKubernetes
+# Criando um Cluster Kubernetes na OCI usando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 ### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
 
 Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes usando o Terraform de forma simples e rápida.
 
-## Oferta Especial #MêsDoKubernetes
+## Oferta Especial [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 ### Criando uma conta gratuita na Oracle Cloud
 
@@ -195,6 +195,13 @@ terraform init
 
 ```
 terraform apply
+```
+
+  - OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
+
+```
+terraform plan -out=oci.tfplan
+terraform apply "oci.tf.plan" -auto-approve
 ```
 
 6. Acesse o cluster.
