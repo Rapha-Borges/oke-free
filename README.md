@@ -1,10 +1,10 @@
-# Criando um Cluster Kubernetes na OCI usando Terraform #MêsDoKubernetes
+# Criando um Cluster Kubernetes na OCI usando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 ### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
 
 Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes usando o Terraform de forma simples e rápida.
 
-## Oferta Especial #MêsDoKubernetes
+## Oferta Especial [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 ### Criando uma conta gratuita na Oracle Cloud
 
@@ -26,13 +26,13 @@ region = us-ashburn-1
 
 shape = VM.Standard.E3.Flex
 
-memory_in_gbs_per_node = 1
+memory_in_gbs_per_node = 2
 
-image_id = ocid1.image.oc1.iad.aaaaaaaab2z4tdx4ozceelvzjzvvugwyavhco7mjuq44ejszrvw4yhz4za5a
+image_id = ocid1.image.oc1.iad.aaaaaaaanwsto6tqklfuawgqrve5ugjpbff3l5qtb7bs35dp72ewcnsuwoka
 
 node_size = 1
 
-kubernetes_version = v1.26.7
+kubernetes_version = v1.28.2
 ```
 
 ## Instalando o Terraform
@@ -105,6 +105,53 @@ set OCI_CLI_AUTH=security_token
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
+## Instalando seu Kubectl | Kubernetes 1.28.2 |
+
+### GNU/Linux
+
+Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita na variáveis do terraform. Veja [variables.tf](variables.tf)
+
+1. Baixando o binário kubectl
+
+```
+curl -LO https://dl.k8s.io/release/v1.28.2/bin/linux/amd64/kubectl
+```
+
+2. Instalando o binário
+
+```
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+3. Valide a versão
+
+```
+kubectl version --client
+```
+
+- *Note: O comando acima irá gerar um aviso:*
+    "WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short."
+
+**Você pode ignorar este aviso. Você está apenas verificando a versão do kubectl que instalou.**
+
+### Windows
+
+1. Baixe o binário kubectl
+
+```
+curl.exe -LO "https://dl.k8s.io/release/v1.28.2/bin/windows/amd64/kubectl.exe"
+```
+
+2. **Anexe a pasta binária kubectl à sua variável de ambiente PATH.**
+
+3. Valide a versão
+
+```
+kubectl version --client --output=yaml
+```
+
+**🔗 [Guia de instalação para todos os ambientes](https://kubernetes.io/docs/tasks/tools/)**
+
 ## Criando o cluster
 
 ### CLI
@@ -135,9 +182,18 @@ git clone https://github.com/Rapha-Borges/oke-free.git
 ssh-keygen -t rsa -b 4096 -f id_rsa
 ```
 
+- Linux
+
 ```sh
 export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
 ```
+
+- Windows
+
+```
+set /p TF_VAR_ssh_public_key=<id_rsa.pub
+```
+
 
 3. Valide o tempo de vida do token de autenticação, aconselho que o tempo de vida seja maior que 30 minutos.
 
@@ -165,6 +221,13 @@ terraform init
 
 ```sh
 terraform apply
+```
+
+  - OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
+
+```
+terraform plan -out=oci.tfplan
+terraform apply "oci.tfplan" -auto-approve
 ```
 
 6. Acesse o cluster.
