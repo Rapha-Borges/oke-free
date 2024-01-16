@@ -41,7 +41,7 @@ kubernetes_version = v1.28.2
 sudo pacman -Sy kubectl
 ```
 
-# Debian/Ubuntu e derivados
+#### Debian/Ubuntu e derivados
 ```
 sudo apt update && sudo apt-get install -y apt-transport-https ca-certificates curl
 
@@ -53,7 +53,7 @@ sudo apt update
 sudo apt install -y kubectl
 ```
 
-# RedHat/Fedora e derivados
+#### RedHat/Fedora e derivados
 ```
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -66,7 +66,7 @@ EOF
 
 sudo yum install -y kubectl
 ```
-# Outros Linux
+#### Outros Linux
 ```
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
@@ -79,7 +79,7 @@ mkdir -p ~/.local/bin
 mv ./kubectl ~/.local/bin/kubectl
 ```
 
-# Verificar se foi instalado corretamente:
+#### Verificar se foi instalado corretamente:
 ```
 kubectl version --client
 ```
