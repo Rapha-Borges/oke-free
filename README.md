@@ -104,6 +104,53 @@ set OCI_CLI_AUTH=security_token
 oci session validate --config-file ~/.oci/config --profile DEFAULT --auth security_token
 ```
 
+## Instalando seu Kubectl | Kubernetes 1.28.2 |
+
+### GNU/Linux
+
+Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita na variáveis do terraform. Veja [variables.tf](variables.tf)
+
+1. Baixando o binário kubectl
+
+```
+curl -LO https://dl.k8s.io/release/v1.28.2/bin/linux/amd64/kubectl
+```
+
+2. Instalando o binário
+
+```
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+3. Valide a versão
+
+```
+kubectl version --client
+```
+
+- *Note: O comando acima irá gerar um aviso:*
+    "WARNING: This version information is deprecated and will be replaced with the output from kubectl version --short."
+
+**Você pode ignorar este aviso. Você está apenas verificando a versão do kubectl que instalou.**
+
+### Windows
+
+1. Baixe o binário kubectl
+
+```
+curl.exe -LO "https://dl.k8s.io/release/v1.28.2/bin/windows/amd64/kubectl.exe"
+```
+
+2. **Anexe a pasta binária kubectl à sua variável de ambiente PATH.**
+
+3. Valide a versão
+
+```
+kubectl version --client --output=yaml
+```
+
+**🔗 [Guia de instalação para todos os ambientes](https://kubernetes.io/docs/tasks/tools/)**
+
 ## Criando o cluster
 
 1. Clone o repositório.
