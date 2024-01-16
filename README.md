@@ -154,18 +154,6 @@ kubectl version --client --output=yaml
 
 ## Criando o cluster
 
-### Script para criação do cluster
-
-Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
-
-Atenção: O script está em fase de testes e funciona apenas no Linux.
-
-```sh
-./main.sh
-```
-
-### Manual
-
 1. Clone o repositório.
 
 ```sh
@@ -229,6 +217,16 @@ terraform apply "oci.tfplan" -auto-approve
 
 ```sh
 kubectl get nodes
+```
+
+### Script para criação do cluster
+
+Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
+
+Atenção: O script está em fase de testes e funciona apenas no Linux.
+
+```sh
+./main.sh
 ```
 
 ## Load Balancer
