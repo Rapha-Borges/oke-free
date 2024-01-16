@@ -36,7 +36,7 @@ kubernetes_version = v1.28.2
 ## instalando kubectl
 
 ### - Linux
-# ArchLinux/Manjaro e derivados
+#### ArchLinux/Manjaro e derivados
 ```
 sudo pacman -Sy kubectl
 ```
