@@ -17,3 +17,7 @@ terraform.tfstate*
 
 # Ignore SSH keys
 id_rsa*
+
+# Ignore output shell
+output-gen*
+tfplan

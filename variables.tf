@@ -7,7 +7,7 @@ variable "compartment_name" {
 
 variable "region" {
   type    = string
-  default = "us-ashburn-1"  
+  default = "us-ashburn-1"
 }
 
 # ---------->VM's----------
