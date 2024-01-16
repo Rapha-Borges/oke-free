@@ -146,6 +146,13 @@ terraform init
 terraform apply
 ```
 
+  - OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
+
+```
+terraform plan -out=oci.tfplan
+terraform apply "oci.tf.plan" -auto-approve
+```
+
 6. Acesse o cluster.
 
 ```
