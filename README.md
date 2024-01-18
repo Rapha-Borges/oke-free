@@ -292,6 +292,61 @@ Para resolver esse problema, basta deletar os recursos manualmente no console da
 
 Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
 
+## Utilizando uma `API KEY` com o comando `kubectl`
+
+Você pode configurar o comando `kubectl` para utilizar uma `API KEY`. Assim, você não precisará se autenticar pelo OCI CLI toda vez que quiser acessar o cluster.
+
+1. Crie uma `API key`
+
+- Entre no seu perfil, acesse a aba [API Keys](https://cloud.oracle.com/identity/domains/my-profile/api-keys) e clique em `Add API Key`.
+
+2. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
+
+3. Após o download, mova a chaves para o diretório `~/.oci/` e renomeie para `oci_api_key.pem`.
+
+```
+mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
+```
+
+3. Copie o texto que aparece na tela para o arquivo `~/.oci/config`. Não se esqueça de substituir o valor do compo `key_file` pelo `caminho` do arquivo da `chave privada`.
+
+```
+[DEFAULT]
+user=ocid1.user.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+fingerprint=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+tenancy=ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+region=xxxxxxxx
+key_file=~/.oci/oci_api_key.pem
+```
+
+4. Edite o arquivo `~/.kube/config` seguindo o modelo abaixo:
+
+```
+- name: user-xxxxxxxxxx
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      command: oci
+      args:
+      - ce
+      - cluster
+      - generate-token
+      - --cluster-id
+      - xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      - --region
+      - xxxxxxxxxxx
+      - --auth            # ADICIONE ESSA LINHA
+      - api_key           # ADICIONE ESSA LINHA
+      - --profile         # ADICIONE ESSA LINHA
+      - DEFAULT           # ADICIONE ESSA LINHA
+```
+
+5. Corrija as permissões da chave privada:
+
+```
+oci setup repair-file-permissions --file ~/.oci/oci_api_key.pem
+```
+
 # Referências
 
 - [Terraform Documentation](https://www.terraform.io/docs/index.html)
