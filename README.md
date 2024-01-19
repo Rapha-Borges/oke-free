@@ -292,9 +292,9 @@ Para resolver esse problema, basta deletar os recursos manualmente no console da
 
 Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
 
-## Utilizando uma `API KEY` com o comando `kubectl`
+## Autenticando com o uso da `API KEY`
 
-Você pode configurar o comando `kubectl` para utilizar uma `API KEY`. Assim, você não precisará se autenticar pelo OCI CLI toda vez que quiser acessar o cluster.
+Você pode utilizar a autenticação do tipo `API KEY` para criar e gerenciar o seu cluster. A vantage desse tipo de autenticação é que você não precisa utilizar o `session token`.
 
 1. Crie uma `API key`
 
@@ -302,13 +302,23 @@ Você pode configurar o comando `kubectl` para utilizar uma `API KEY`. Assim, vo
 
 2. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
 
-3. Após o download, mova a chaves para o diretório `~/.oci/` e renomeie para `oci_api_key.pem`.
+3. Após o download, mova a chave para o diretório `~/.oci/` e renomeie para `oci_api_key.pem`.
 
 ```
 mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 ```
 
-3. Copie o texto que aparece na tela para o arquivo `~/.oci/config`. Não se esqueça de substituir o valor do compo `key_file` pelo `caminho` do arquivo da `chave privada`.
+4. Corrija as permissões da chave privada:
+
+```
+oci setup repair-file-permissions --file ~/.oci/oci_api_key.pem
+```
+
+5. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo `~/.oci/config`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada `~/.oci/oci_api_key.pem`, conforme exemplo abaixo.
+
+```
+vim ~/.oci/config
+```
 
 ```
 [DEFAULT]
@@ -319,9 +329,26 @@ region=xxxxxxxx
 key_file=~/.oci/oci_api_key.pem
 ```
 
-> Siga esses passos abaixo apenas se o cluster já foi criado antes das configurações da API Key
+6. Adicione os valores ao arquivo `export_variables.sh`, para exportar todas as variáveis necessárias para a autenticação do terraform.
 
-4. Edite o arquivo `~/.kube/config` seguindo o modelo abaixo:
+```
+export TF_VAR_tenancy_ocid=<your tenancy ocid>
+export TF_VAR_user_ocid=<your user ocid>
+export TF_VAR_fingerprint=<your fingerprint>
+export TF_VAR_private_key_path=~/.oci/oci_api_key.pem
+export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
+export TF_VAR_ssh_private_key=$(cat id_rsa)
+```
+
+Agora rode o script para exportar as variáveis:
+
+```
+source export_variables.sh
+```
+
+> Siga o passo abaixo somente após a criação do cluster com sucesso.
+
+7. Edite o arquivo `~/.kube/config` seguindo o modelo abaixo:
 
 ```
 - name: user-xxxxxxxxxx
@@ -341,36 +368,6 @@ key_file=~/.oci/oci_api_key.pem
       - api_key           # ADICIONE ESSA LINHA
       - --profile         # ADICIONE ESSA LINHA
       - DEFAULT           # ADICIONE ESSA LINHA
-```
-
-5. Corrija as permissões da chave privada:
-
-```
-oci setup repair-file-permissions --file ~/.oci/oci_api_key.pem
-```
-
-6. Adicione os valores ao arquivo `export_variables.sh`, para conseguir exportar todas as variáveis necessárias para a autenticação do terraform e o kubectl com o OCI.
-
-Use o comando `cat` no caminho para as suas chaves pública e privada de ssh:
-
-```
-export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
-export TF_VAR_ssh_private_key=$(cat id_rsa)
-```
-
-Use o comando `cat ~/.oci/config` para conseguir o resto dos valores do profile DEFAULT:
-
-```
-export TF_VAR_user_ocid=<your user ocid>
-export TF_VAR_fingerprint=<your fingerprint>
-export TF_VAR_tenancy_ocid=<your tenancy ocid>
-export TF_VAR_private_key_path=<path to your private key>
-```
-
-Agora rode o script:
-
-```
-source export_variables.sh
 ```
 
 # Referências
