@@ -367,11 +367,10 @@ export TF_VAR_tenancy_ocid=<your tenancy ocid>
 export TF_VAR_private_key_path=<path to your private key>
 ```
 
-Agora dê as permissões para o script e rode:
+Agora rode o script:
 
 ```
-chmod +x export_variables.sh
-./export_variables.sh
+source export_variables.sh
 ```
 
 # Referências
