@@ -21,3 +21,6 @@ id_rsa*
 # Ignore output shell
 output-gen*
 tfplan
+
+# Ignore VSCode
+.vscode/

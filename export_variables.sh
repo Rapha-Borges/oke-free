@@ -1,6 +1,9 @@
-export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
+export TF_VAR_user_ocid=ocid1.user.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+export TF_VAR_fingerprint=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+export TF_VAR_tenancy_ocid=ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+export TF_VAR_private_key_path=~/.oci/oci_api_key.pem
 export TF_VAR_ssh_private_key=$(cat id_rsa)
-export TF_VAR_tenancy_ocid=<your tenancy ocid>
-export TF_VAR_user_ocid=<your user ocid>
-export TF_VAR_fingerprint=<your fingerprint>
-export TF_VAR_private_key_path=<path to your private key>
+export TF_VAR_ssh_public_key=$(cat id_rsa.pub)
+export TF_VAR_oci_profile=<DEFAULT ou MINHA_API_KEY>
+export OCI_CLI_AUTH=<api_key ou security_token>
+export OCI_REGION=us-ashburn-1
