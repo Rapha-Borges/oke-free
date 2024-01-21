@@ -1,14 +1,30 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nginx-cert
+  # namespace: default
+spec:
+  secretName: nginx-tls
+  issuerRef:
+    name: letsencrypt-prod
+    # name: letsencrypt-staging
+    kind: ClusterIssuer
+  dnsNames:
+  - nginx.oke-free.org
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nginx-ingress
-  # annotations:
-  #   cert-manager.io/cluster-issuer: letsencrypt-prod
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  #   cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
-  # tls:
-  # - hosts:
-  #   - nginx.oke-free.org
-  #   secretName: nginx-tls
+  tls:
+  - hosts:
+    - nginx.oke-free.org
+    secretName: nginx-tls
   ingressClassName: nginx
   rules:
   - host: nginx.oke-free.org
