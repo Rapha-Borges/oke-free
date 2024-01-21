@@ -96,3 +96,24 @@ variable "listener_port_https" {
 variable "ssh_public_key" {
   type    = string
 }
+
+variable "ssh_private_key" {
+  type = string
+  default = "id_rsa"
+}
+
+# variable "fingerprint" {
+#   type    = string
+# }
+
+# variable "private_key_path" {
+#   type    = string
+# }
+
+# variable "tenancy_ocid" {
+#   type    = string
+# }
+
+# variable "user_ocid" {
+#   type    = string
+# }

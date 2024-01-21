@@ -11,8 +11,6 @@ resource "oci_network_load_balancer_network_load_balancer" "nlb" {
   is_preserve_source_destination = false
 }
 
-
-
 resource "oci_network_load_balancer_backend_set" "nlb_backend_set_http" {
   health_checker {
     protocol = "TCP"
@@ -37,11 +35,6 @@ resource "oci_network_load_balancer_backend_set" "nlb_backend_set_https" {
   is_preserve_source = false
 }
 
-
-
-
-
-
 resource "oci_network_load_balancer_backend" "nlb_backend_http" {
   backend_set_name         = oci_network_load_balancer_backend_set.nlb_backend_set_http.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
@@ -59,12 +52,6 @@ resource "oci_network_load_balancer_backend" "nlb_backend_https" {
   count                    = var.node_size
   target_id                = data.oci_core_instances.instances.instances[count.index].id
 }
-
-
-
-
-
-
 
 resource "oci_network_load_balancer_listener" "nlb_listener_http" {
   default_backend_set_name = oci_network_load_balancer_backend_set.nlb_backend_set_http.name
