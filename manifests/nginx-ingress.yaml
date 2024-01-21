@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  # annotations:
+  #   cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  # tls:
+  # - hosts:
+  #   - nginx.oke-free.org
+  #   secretName: nginx-tls
+  ingressClassName: nginx
+  rules:
+  - host: nginx.oke-free.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80

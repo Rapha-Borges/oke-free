@@ -55,8 +55,10 @@ module "loadbalancer" {
   compartment_id                    = module.compartment.compartment_id
   public_subnet_id                  = module.network.public_subnet_id
   node_size                         = var.node_size
-  node_port                         = var.node_port
-  listerner_port                    = var.listerner_port
+  node_port_http                         = var.node_port_http
+  node_port_https                         = var.node_port_https
+  listener_port_http                    = var.listener_port_http
+  listener_port_https                    = var.listener_port_https
 }
 
 module "kubeconfig" {
