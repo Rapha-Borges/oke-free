@@ -31,7 +31,9 @@ variable "image_id" {
   type    = string
   default = "ocid1.image.oc1.iad.aaaaaaaao2zpwcb2osmbtliiuzlphc3y2fqaqmcpp5ttlcf573sidkabml7a"
 }
-# Link to a list of available images (Be sure to select the correct region and CPU architecture. We are using Oracle-Linux-8.8-aarch64-2023.09.26-0-OKE-1.28.2-653)
+# Link to a list of available images (Be sure to select the correct region and CPU architecture.
+# We are using Oracle-Linux-8.8-aarch64-2023.09.26-0-OKE-1.28.2-653)
+# https://docs.oracle.com/en-us/iaas/images/image/d4c060a5-041c-477b-8226-2d25d91c4ffb/
 # https://docs.cloud.oracle.com/iaas/images/
 
 # ----------> Cluster <----------
@@ -90,11 +92,11 @@ variable "ssh_private_key" {
   default = "id_rsa"
 }
 
-# variable "fingerprint" {
+# variable "user_ocid" {
 #   type    = string
 # }
 
-# variable "private_key_path" {
+# variable "fingerprint" {
 #   type    = string
 # }
 
@@ -102,6 +104,11 @@ variable "ssh_private_key" {
 #   type    = string
 # }
 
-# variable "user_ocid" {
+# variable "private_key_path" {
 #   type    = string
 # }
+
+variable "oci_profile" {
+  type    = string
+  # default = "MINHA_API_KEY"
+}
