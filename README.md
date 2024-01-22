@@ -19,7 +19,7 @@ IMPORTANTE:
 
 ### Variáveis do Terraform personalizadas para o lab
 
-Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lemre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
+Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lembre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
 
 ```
 region = us-ashburn-1
