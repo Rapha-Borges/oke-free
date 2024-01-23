@@ -131,7 +131,7 @@ kubectl version --client --output=yaml
 - GNU/Linux
 
 ```
-mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
+mkdir -p ~/.oci && mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 ```
 
 - Windows
