@@ -25,7 +25,7 @@ spec:
   - hosts:
     - nginx.oke-free.org
     secretName: nginx-tls
-  ingressClassName: nginx
+  ingressClassName: nginx  # Cuidado esse é a classe de ingress
   rules:
   - host: nginx.oke-free.org
     http:

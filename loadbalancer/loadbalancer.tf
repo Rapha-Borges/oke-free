@@ -11,11 +11,11 @@ resource "oci_network_load_balancer_network_load_balancer" "nlb" {
   is_preserve_source_destination = false
 }
 
-resource "oci_network_load_balancer_backend_set" "nlb_backend_set_http" {
+resource "oci_network_load_balancer_backend_set" "nlb_backend_set" {
   health_checker {
     protocol = "TCP"
   }
-  name                     = "k8s-backend-set-http"
+  name                     = "k8s-backend-set-nginx"
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
   policy                   = "FIVE_TUPLE"
   depends_on               = [oci_network_load_balancer_network_load_balancer.nlb]
@@ -23,50 +23,20 @@ resource "oci_network_load_balancer_backend_set" "nlb_backend_set_http" {
   is_preserve_source = false
 }
 
-resource "oci_network_load_balancer_backend_set" "nlb_backend_set_https" {
-  health_checker {
-    protocol = "TCP"
-  }
-  name                     = "k8s-backend-set-https"
+resource "oci_network_load_balancer_backend" "nlb_backend" {
+  backend_set_name         = oci_network_load_balancer_backend_set.nlb_backend_set.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
-  policy                   = "FIVE_TUPLE"
-  depends_on               = [oci_network_load_balancer_network_load_balancer.nlb]
-
-  is_preserve_source = false
-}
-
-resource "oci_network_load_balancer_backend" "nlb_backend_http" {
-  backend_set_name         = oci_network_load_balancer_backend_set.nlb_backend_set_http.name
-  network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
-  port                     = var.node_port_http
-  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set_http]
+  port                     = var.node_port
+  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set]
   count                    = var.node_size
   target_id                = data.oci_core_instances.instances.instances[count.index].id
 }
 
-resource "oci_network_load_balancer_backend" "nlb_backend_https" {
-  backend_set_name         = oci_network_load_balancer_backend_set.nlb_backend_set_https.name
+resource "oci_network_load_balancer_listener" "nlb_listener" {
+  default_backend_set_name = oci_network_load_balancer_backend_set.nlb_backend_set.name
+  name                     = "k8s-nlb-listener"
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
-  port                     = var.node_port_https
-  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set_https]
-  count                    = var.node_size
-  target_id                = data.oci_core_instances.instances.instances[count.index].id
-}
-
-resource "oci_network_load_balancer_listener" "nlb_listener_http" {
-  default_backend_set_name = oci_network_load_balancer_backend_set.nlb_backend_set_http.name
-  name                     = "k8s-nlb-listener-http"
-  network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
-  port                     = var.listener_port_http
+  port                     = var.listerner_port
   protocol                 = "TCP"
-  depends_on               = [oci_network_load_balancer_backend.nlb_backend_http]
-}
-
-resource "oci_network_load_balancer_listener" "nlb_listener_https" {
-  default_backend_set_name = oci_network_load_balancer_backend_set.nlb_backend_set_https.name
-  name                     = "k8s-nlb-listener-https"
-  network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
-  port                     = var.listener_port_https
-  protocol                 = "TCP"
-  depends_on               = [oci_network_load_balancer_backend.nlb_backend_https]
+  depends_on               = [oci_network_load_balancer_backend.nlb_backend]
 }

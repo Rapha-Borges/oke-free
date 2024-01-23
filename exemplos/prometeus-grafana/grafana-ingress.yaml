@@ -1,0 +1,40 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-cert
+  namespace: prometheus
+spec:
+  secretName: grafana-tls
+  issuerRef:
+    name: letsencrypt-prod
+    # name: letsencrypt-staging
+    kind: ClusterIssuer
+  dnsNames:
+  - grafana.oke-free.org
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  #   cert-manager.io/cluster-issuer: "letsencrypt-staging"
+  namespace: prometheus
+spec:
+  tls:
+  - hosts:
+    - grafana.oke-free.org
+    secretName: grafana-tls
+  ingressClassName: nginx
+  rules:
+  - host: grafana.oke-free.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-stack-grafana
+            port:
+              number: 80
