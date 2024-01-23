@@ -1,28 +1,17 @@
 # Criando um Cluster Kubernetes na OCI utilizando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
+### BRANCH PARA TESTE DO CLUSTER ALWAYS FREE - UTILIZE SOMENTE SE ESTIVER DE ACORDO COM OS RISCOS
+
 ### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
 
 Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o Terraform de forma simples e rápida.
 
 Acesse este [link e crie a sua conta](https://signup.cloud.oracle.com/)
 
-### Variáveis do Terraform personalizadas para o lab
+### Antes de começar
 
-Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lembre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
-
-```
-region = us-ashburn-1
-
-shape = VM.Standard.E3.Flex
-
-memory_in_gbs_per_node = 4
-
-image_id = ocid1.image.oc1.iad.aaaaaaaanwsto6tqklfuawgqrve5ugjpbff3l5qtb7bs35dp72ewcnsuwoka
-
-node_size = 1
-
-kubernetes_version = v1.28.2
-```
+- Crie um alerta na sua conta para não ser cobrado por acidente. [Budget](https://cloud.oracle.com/usage/budgets)
+- Devido limitações da conta gratuita, você provavelmente precisará realizar o upgrade para uma conta `Pay As You Go` para conseguir criar o cluster. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
 ## Instalando o Terraform
 
