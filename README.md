@@ -1,14 +1,14 @@
-# Criando um Cluster Kubernetes na OCI utilizando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
+# Criando um Cluster Kubernetes na OCI utilizando OpenTofu [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 ### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
 
-Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o Terraform de forma simples e rápida.
+Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o OpenTofu de forma simples e rápida.
 
 Acesse este [link e crie a sua conta](https://signup.cloud.oracle.com/)
 
-### Variáveis do Terraform personalizadas para o lab
+### Variáveis do OpenTofu personalizadas para o lab
 
-Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lembre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
+Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do OpenTofu no arquivo `variables.tf` pelas variáveis abaixo. Mas lembre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
 
 ```
 region = us-ashburn-1
@@ -24,21 +24,24 @@ node_size = 1
 kubernetes_version = v1.28.2
 ```
 
-## Instalando o Terraform
+## Instalando o OpenTofu
 
 - GNU/Linux
 
 ```sh
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
+curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+chmod +x install-opentofu.sh
+./install-opentofu.sh --install-method deb
+rm install-opentofu.sh
 ```
 
 - Windows
 
-1. Baixe o [Terraform](https://www.terraform.io/downloads.html) e descompacte o arquivo em um diretório de sua preferência.
-
-2. Adicione o diretório ao [PATH do Windows](https://www.java.com/pt-BR/download/help/path_pt-br.html).
+```powershell
+Invoke-WebRequest -outfile "install-opentofu.ps1" -uri "https://get.opentofu.org/install-opentofu.ps1"
+& .\install-opentofu.ps1 -installMethod standalone
+Remove-Item install-opentofu.ps1
+```
 
 ## Instalando o OCI CLI
 
@@ -70,7 +73,7 @@ oci -v
 
 - GNU/Linux
 
-Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita na variáveis do terraform. Veja [variables.tf](variables.tf)
+Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita no arquivo de variáveis. Veja [variables.tf](variables.tf)
 
 1. Baixando o binário kubectl
 
@@ -234,23 +237,23 @@ env.bat
 
 ## Criando o cluster
 
-1. Inicialize o Terraform.
+1. Instale os módulos
 
 ```sh
-terraform init
+tofu init
 ```
 
 2. Crie o cluster.
 
 ```sh
-terraform apply
+tofu apply
 ```
 
-- OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
+- OBS: Opicionalmente, você pode utilizar o comando `tofu plan` para visualizar as alterações que serão realizadas antes de executar o `tofu apply`. Com os seguintes comandos:
 
 ```
-terraform plan -out=oci.tfplan
-terraform apply "oci.tfplan" -auto-approve
+tofu plan -out=oci.tfplan
+tofu apply "oci.tfplan" -auto-approve
 ```
 
 3. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
@@ -283,7 +286,7 @@ kubectl get nodes
 
 ### Script para criação do cluster
 
-Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
+Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o OpenTofu e criar o cluster.
 
 Atenção: O script está em fase de testes e funciona apenas no Linux.
 
@@ -295,10 +298,10 @@ Atenção: O script está em fase de testes e funciona apenas no Linux.
 
 O cluster que criamos já conta com um Network Load Balancer configurado para expor uma aplicação na porta 80. Basta configurar um serviço do tipo `NodePort` com a porta `80` e a nodePort `30080`. Exemplos de como configurar o serviço podem ser encontrados no diretório `manifests`.
 
-O endereço do Load Balancer é informado na saída do Terraform, no formato `public_ip = "xxx.xxx.xxx.xxx"` e pode ser consultado a qualquer momento com o comando:
+O endereço do Load Balancer é informado na final da execução, no formato `public_ip = "xxx.xxx.xxx.xxx"` e pode ser consultado a qualquer momento com o comando:
 
 ```sh
-terraform output public_ip
+tofu output public_ip
 ```
 
 ## Deletando o cluster
@@ -306,7 +309,7 @@ terraform output public_ip
 1. Para deletar o cluster bastar executar o comando:
 
 ```sh
-terraform destroy
+tofu destroy
 ```
 
 ## Problemas conhecidos
@@ -339,7 +342,7 @@ export OCI_CLI_AUTH=security_token
 set OCI_CLI_AUTH=security_token
 ```
 
-- ### Erros devido a falha na execução do `terraform destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `terraform destroy`
+- ### Erros devido a falha na execução do `tofu destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `tofu destroy`
 
 Para resolver esse problema, basta deletar os recursos manualmente no console da OCI. Seguindo a ordem abaixo:
 
@@ -351,7 +354,7 @@ Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecion
 
 # Referências
 
-- [Terraform Documentation](https://www.terraform.io/docs/index.html)
+- [OpenTofu Documentation](https://opentofu.org/docs/)
 - [Terrafom Essentials](https://www.linuxtips.io/course/terraform-essentials)
 - [Free Oracle Cloud Kubernetes cluster with Terraform](https://arnoldgalovics.com/oracle-cloud-kubernetes-terraform/)
 
