@@ -120,13 +120,19 @@ kubectl version --client --output=yaml
 
 ## Autenticando na OCI
 
-1. Crie uma `API key`
+1. Antes de começar, clone o repositório.
+
+```sh
+git clone https://github.com/Rapha-Borges/oke-free.git
+```
+
+2. Crie uma `API key`
 
 - Entre no seu perfil, acesse a aba [API Keys](https://cloud.oracle.com/identity/domains/my-profile/api-keys) e clique em `Add API Key`.
 
-2. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
+3. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
 
-3. Após o download, mova a chave para o diretório do `OCI CLI` e renomeie para `oci_api_key.pem`.
+4. Após o download, mova a chave para o diretório do `OCI CLI` e renomeie para `oci_api_key.pem`.
 
 - GNU/Linux
 
@@ -140,13 +146,13 @@ mkdir -p ~/.oci && mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 move C:\Users\<user>\Downloads\<nome_do_arquivo>.pem C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-4. Corrija as permissões da chave privada:
+5. Corrija as permissões da chave privada:
 
 ```
 oci setup repair-file-permissions --file <caminho_da_chave_privada>
 ```
 
-5. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo de configuração do `OCI CLI`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada.
+6. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo de configuração do `OCI CLI`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada.
 
 - GNU/Linux
 
@@ -178,13 +184,13 @@ region=xxxxxxxx
 key_file=C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-6. Crie a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
+7. Crie a pasta `/ssh` e gere a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
 
 ```bash
 ssh-keygen -t rsa -b 4096 -f ssh/id_rsa
 ```
 
-7. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta.
+8. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta.
 
 - GNU/Linux
 
@@ -228,19 +234,13 @@ env.bat
 
 ## Criando o cluster
 
-1. Clone o repositório.
-
-```sh
-git clone https://github.com/Rapha-Borges/oke-free.git
-```
-
-2. Inicialize o Terraform.
+1. Inicialize o Terraform.
 
 ```sh
 terraform init
 ```
 
-3. Crie o cluster.
+2. Crie o cluster.
 
 ```sh
 terraform apply
@@ -253,7 +253,7 @@ terraform plan -out=oci.tfplan
 terraform apply "oci.tfplan" -auto-approve
 ```
 
-4. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
+3. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
 
 ```sh
 - name: user-xxxxxxxxxx
@@ -275,7 +275,7 @@ terraform apply "oci.tfplan" -auto-approve
       - DEFAULT           # ADICIONE ESSA LINHA
 ```
 
-5. Acesse o cluster.
+4. Acesse o cluster.
 
 ```sh
 kubectl get nodes
@@ -349,10 +349,10 @@ Para resolver esse problema, basta deletar os recursos manualmente no console da
 
 Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
 
-
-
 # Referências
 
 - [Terraform Documentation](https://www.terraform.io/docs/index.html)
 - [Terrafom Essentials](https://www.linuxtips.io/course/terraform-essentials)
 - [Free Oracle Cloud Kubernetes cluster with Terraform](https://arnoldgalovics.com/oracle-cloud-kubernetes-terraform/)
+
+## Criado por [@Raphael Borges](https://r11s.com.br/)
