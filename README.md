@@ -250,7 +250,7 @@ terraform apply
 
 ```
 terraform plan -out=oci.tfplan
-terraform apply "oci.tfplan" -auto-approve
+terraform apply -auto-approve "oci.tfplan"
 ```
 
 3. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
