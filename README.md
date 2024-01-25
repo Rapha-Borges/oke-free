@@ -253,7 +253,7 @@ tofu apply
 
 ```
 tofu plan -out=oci.tfplan
-tofu apply "oci.tfplan" -auto-approve
+tofu apply -auto-approve "oci.tfplan"
 ```
 
 3. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
