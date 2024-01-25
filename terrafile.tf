@@ -62,6 +62,7 @@ module "loadbalancer" {
 module "kubeconfig" {
   source                            = "./kubeconfig"
   cluster_id                        = module.cluster.cluster_id
+  oci_profile                       = var.oci_profile
   depends_on                        = [ module.loadbalancer ]
 }
 

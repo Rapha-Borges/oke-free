@@ -79,7 +79,7 @@ variable "listerner_port" {
   default = 80
 }
 
-# ----------> SSH <----------
+# ----------> Auth <----------
 
 variable "ssh_public_key" {
   type    = string
@@ -98,5 +98,9 @@ variable "tenancy_ocid" {
 }
 
 variable "user_ocid" {
+  type    = string
+}
+
+variable "oci_profile" {
   type    = string
 }
