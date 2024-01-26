@@ -100,3 +100,7 @@ variable "tenancy_ocid" {
 variable "user_ocid" {
   type    = string
 }
+
+variable "oci_profile" {
+  type    = string
+}
