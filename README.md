@@ -1,17 +1,16 @@
 # Criando um Cluster Kubernetes na OCI utilizando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
-### BRANCH PARA TESTE DO CLUSTER ALWAYS FREE - UTILIZE SOMENTE SE ESTIVER DE ACORDO COM OS RISCOS
-
-### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
-
 Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o Terraform de forma simples e rápida.
 
 Acesse este [link e crie a sua conta](https://signup.cloud.oracle.com/)
 
-### Antes de começar
+### Pontos Importantes Antes de Começar
 
-- Crie um alerta na sua conta para não ser cobrado por acidente. [Budget](https://cloud.oracle.com/usage/budgets)
-- Devido limitações da conta gratuita, você provavelmente precisará realizar o upgrade para uma conta `Pay As You Go` para conseguir criar o cluster. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
+- Devido limitações da conta gratuita, você provavelmente precisará realizar o upgrade para uma conta `Pay As You Go` para conseguir criar o cluster utilizando as instâncias gratuitas `VM.Standard.A1.Flex`. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
+
+- Crie um alerta na sua conta para não ser cobrado por acidente [Budget](https://cloud.oracle.com/usage/budgets).
+
+- Não altere o shape da instância utilizada no cluster, pois a única instância gratuita compatível com o OKE é a `VM.Standard.A1.Flex`.
 
 ## Instalando o Terraform
 
@@ -109,18 +108,24 @@ kubectl version --client --output=yaml
 
 ## Autenticando na OCI
 
-1. Crie uma `API key`
+1. Antes de começar, clone o repositório.
+
+```sh
+git clone https://github.com/Rapha-Borges/oke-free.git
+```
+
+2. Crie uma `API key`
 
 - Entre no seu perfil, acesse a aba [API Keys](https://cloud.oracle.com/identity/domains/my-profile/api-keys) e clique em `Add API Key`.
 
-2. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
+3. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
 
-3. Após o download, mova a chave para o diretório do `OCI CLI` e renomeie para `oci_api_key.pem`.
+4. Após o download, mova a chave para o diretório do `OCI CLI` e renomeie para `oci_api_key.pem`.
 
 - GNU/Linux
 
 ```
-mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
+mkdir -p ~/.oci && mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 ```
 
 - Windows
@@ -129,13 +134,13 @@ mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 move C:\Users\<user>\Downloads\<nome_do_arquivo>.pem C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-4. Corrija as permissões da chave privada:
+5. Corrija as permissões da chave privada:
 
 ```
 oci setup repair-file-permissions --file <caminho_da_chave_privada>
 ```
 
-5. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo de configuração do `OCI CLI`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada.
+6. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo de configuração do `OCI CLI`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada.
 
 - GNU/Linux
 
@@ -167,13 +172,13 @@ region=xxxxxxxx
 key_file=C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-6. Crie a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
+7. Crie a pasta `/ssh` e gere a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
 
 ```bash
 ssh-keygen -t rsa -b 4096 -f ssh/id_rsa
 ```
 
-7. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta.
+8. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta.
 
 - GNU/Linux
 
@@ -211,25 +216,21 @@ set TF_VAR_ssh_public_key=C:\Users\<user>\.oci\ssh\id_rsa.pub
 set TF_VAR_oci_profile="DEFAULT"
 ```
 
+Agora execute o arquivo para exportar as variáveis:
+
 ```
 env.bat
 ```
 
 ## Criando o cluster
 
-1. Clone o repositório.
-
-```sh
-git clone https://github.com/Rapha-Borges/oke-free.git
-```
-
-2. Inicialize o Terraform.
+1. Inicialize o Terraform.
 
 ```sh
 terraform init
 ```
 
-3. Crie o cluster.
+2. Crie o cluster.
 
 ```sh
 terraform apply
@@ -239,10 +240,10 @@ terraform apply
 
 ```
 terraform plan -out=oci.tfplan
-terraform apply "oci.tfplan" -auto-approve
+terraform apply -auto-approve "oci.tfplan"
 ```
 
-4. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
+3. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
 
 ```sh
 - name: user-xxxxxxxxxx
@@ -264,7 +265,7 @@ terraform apply "oci.tfplan" -auto-approve
       - DEFAULT           # ADICIONE ESSA LINHA
 ```
 
-5. Acesse o cluster.
+4. Acesse o cluster.
 
 ```sh
 kubectl get nodes
@@ -272,9 +273,9 @@ kubectl get nodes
 
 ### Script para criação do cluster
 
-Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
+#### Atenção: O script está em fase de testes e funciona apenas no Linux.
 
-Atenção: O script está em fase de testes e funciona apenas no Linux.
+Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
 
 ```sh
 ./main.sh
@@ -337,8 +338,6 @@ Para resolver esse problema, basta deletar os recursos manualmente no console da
 - [Compartments](https://cloud.oracle.com/identity/compartments)
 
 Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
-
-
 
 # Referências
 
