@@ -344,3 +344,5 @@ Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecion
 - [Terraform Documentation](https://www.terraform.io/docs/index.html)
 - [Terrafom Essentials](https://www.linuxtips.io/course/terraform-essentials)
 - [Free Oracle Cloud Kubernetes cluster with Terraform](https://arnoldgalovics.com/oracle-cloud-kubernetes-terraform/)
+
+## Criado por [@Raphael Borges](https://r11s.com.br/)
