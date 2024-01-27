@@ -61,9 +61,9 @@ module "loadbalancer" {
 
 module "kubeconfig" {
   source                            = "./kubeconfig"
+  depends_on                        = [ module.loadbalancer ]
   cluster_id                        = module.cluster.cluster_id
   oci_profile                       = var.oci_profile
-  depends_on                        = [ module.loadbalancer ]
 }
 
 output "public_ip" {
