@@ -6,7 +6,7 @@ Acesse este [link e crie a sua conta](https://signup.cloud.oracle.com/)
 
 ### Pontos Importantes Antes de Começar
 
-- Devido limitações da conta gratuita, você provavelmente precisará realizar o upgrade para uma conta `Pay As You Go` para conseguir criar o cluster utilizando as instâncias gratuitas `VM.Standard.A1.Flex`. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
+- Devido limitações da conta gratuita, você provavelmente precisará realizar o [upgrade para uma conta](https://cloud.oracle.com/invoices-and-orders/upgrade-and-payment) `Pay As You Go` para conseguir criar o cluster utilizando as instâncias gratuitas `VM.Standard.A1.Flex`. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
 - Crie um alerta na sua conta para não ser cobrado por acidente [Budget](https://cloud.oracle.com/usage/budgets).
 
