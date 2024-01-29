@@ -183,7 +183,7 @@ ssh-keygen -t rsa -b 4096 -f ./ssh/id_rsa
 - GNU/Linux
 
 ```
-vim ./temp/env.sh
+vim ./env.sh
 ```
 
 ```
@@ -199,7 +199,7 @@ export TF_VAR_oci_profile="DEFAULT"
 Agora rode o script para exportar as variáveis:
 
 ```
-source ./temp/env.sh
+source ./env.sh
 ```
 
 - Windows
