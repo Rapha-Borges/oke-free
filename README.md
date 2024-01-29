@@ -172,18 +172,18 @@ region=xxxxxxxx
 key_file=C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-7. Crie a pasta `/ssh` e gere a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
+7. Crie a pasta `./ssh` e gere a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
 
 ```bash
-ssh-keygen -t rsa -b 4096 -f ssh/id_rsa
+ssh-keygen -t rsa -b 4096 -f ./ssh/id_rsa
 ```
 
-8. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta.
+8. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta (o conteúdo usado no arquivo ~/.oci/config acima).
 
 - GNU/Linux
 
 ```
-vim env.sh
+vim ./env.sh
 ```
 
 ```
@@ -199,7 +199,7 @@ export TF_VAR_oci_profile="DEFAULT"
 Agora rode o script para exportar as variáveis:
 
 ```
-source env.sh
+source ./env.sh
 ```
 
 - Windows
