@@ -1,28 +1,16 @@
 # Criando um Cluster Kubernetes na OCI utilizando OpenTofu [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
-### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
-
-Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o OpenTofu de forma simples e rápida.
+Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o Terraform de forma simples e rápida.
 
 Acesse este [link e crie a sua conta](https://signup.cloud.oracle.com/)
 
-### Variáveis do OpenTofu personalizadas para o lab
+### Pontos Importantes Antes de Começar
 
-Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do OpenTofu no arquivo `variables.tf` pelas variáveis abaixo. Mas lembre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
+- Devido limitações da conta gratuita, você provavelmente precisará realizar o [upgrade para uma conta](https://cloud.oracle.com/invoices-and-orders/upgrade-and-payment) `Pay As You Go` para conseguir criar o cluster utilizando as instâncias gratuitas `VM.Standard.A1.Flex`. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
-```
-region = us-ashburn-1
+- Crie um alerta na sua conta para não ser cobrado por acidente [Budget](https://cloud.oracle.com/usage/budgets).
 
-shape = VM.Standard.E3.Flex
-
-memory_in_gbs_per_node = 4
-
-image_id = ocid1.image.oc1.iad.aaaaaaaanwsto6tqklfuawgqrve5ugjpbff3l5qtb7bs35dp72ewcnsuwoka
-
-node_size = 1
-
-kubernetes_version = v1.28.2
-```
+- Não altere o shape da instância utilizada no cluster, pois a única instância gratuita compatível com o OKE é a `VM.Standard.A1.Flex`.
 
 ## Instalando o OpenTofu
 
@@ -231,6 +219,8 @@ set TF_VAR_ssh_public_key=C:\Users\<user>\.oci\ssh\id_rsa.pub
 set TF_VAR_oci_profile="DEFAULT"
 ```
 
+Agora execute o arquivo para exportar as variáveis:
+
 ```
 env.bat
 ```
@@ -286,9 +276,9 @@ kubectl get nodes
 
 ### Script para criação do cluster
 
-Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o OpenTofu e criar o cluster.
+#### Atenção: O script está em fase de testes e funciona apenas no Linux.
 
-Atenção: O script está em fase de testes e funciona apenas no Linux.
+Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
 
 ```sh
 ./main.sh
