@@ -1,44 +1,35 @@
-# Criando um Cluster Kubernetes na OCI utilizando Terraform [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
-
-### EM ATUALIZAÇÃO - VERIFIQUE A [ISSUE #8](https://github.com/Rapha-Borges/oke-free/issues/8) PARA MAIORES INFORMAÇÕES
+# Criando um Cluster Kubernetes na OCI utilizando OpenTofu [#MêsDoKubernetes](https://github.com/linuxtips/MesDoKubernetes)
 
 Crie uma conta gratuita na Oracle Cloud, e provisione um cluster Kubernetes utilizando o Terraform de forma simples e rápida.
 
 Acesse este [link e crie a sua conta](https://signup.cloud.oracle.com/)
 
-### Variáveis do Terraform personalizadas para o lab
+### Pontos Importantes Antes de Começar
 
-Caso queira realizar o lab com as configurações utilizadas na live, basta substituir as variáveis do Terraform no arquivo `variables.tf` pelas variáveis abaixo. Mas lembre-se, as instâncias criadas com essas configurações só serão gratuitas enquanto os seus créditos oferecidos pela Oracle durante o #MêsDoKubernetes estiverem ativos.
+- Devido limitações da conta gratuita, você provavelmente precisará realizar o [upgrade para uma conta](https://cloud.oracle.com/invoices-and-orders/upgrade-and-payment) `Pay As You Go` para conseguir criar o cluster utilizando as instâncias gratuitas `VM.Standard.A1.Flex`. Você não será cobrado pelo uso de recursos gratuitos mesmo após o upgrade.
 
-```
-region = us-ashburn-1
+- Crie um alerta na sua conta para não ser cobrado por acidente [Budget](https://cloud.oracle.com/usage/budgets).
 
-shape = VM.Standard.E3.Flex
+- Não altere o shape da instância utilizada no cluster, pois a única instância gratuita compatível com o OKE é a `VM.Standard.A1.Flex`.
 
-memory_in_gbs_per_node = 4
-
-image_id = ocid1.image.oc1.iad.aaaaaaaanwsto6tqklfuawgqrve5ugjpbff3l5qtb7bs35dp72ewcnsuwoka
-
-node_size = 1
-
-kubernetes_version = v1.28.2
-```
-
-## Instalando o Terraform
+## Instalando o OpenTofu
 
 - GNU/Linux
 
 ```sh
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
+curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh
+chmod +x install-opentofu.sh
+./install-opentofu.sh --install-method deb
+rm install-opentofu.sh
 ```
 
 - Windows
 
-1. Baixe o [Terraform](https://www.terraform.io/downloads.html) e descompacte o arquivo em um diretório de sua preferência.
-
-2. Adicione o diretório ao [PATH do Windows](https://www.java.com/pt-BR/download/help/path_pt-br.html).
+```powershell
+Invoke-WebRequest -outfile "install-opentofu.ps1" -uri "https://get.opentofu.org/install-opentofu.ps1"
+& .\install-opentofu.ps1 -installMethod standalone
+Remove-Item install-opentofu.ps1
+```
 
 ## Instalando o OCI CLI
 
@@ -70,7 +61,7 @@ oci -v
 
 - GNU/Linux
 
-Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita na variáveis do terraform. Veja [variables.tf](variables.tf)
+Kubectl é quem faz a comunicação com a API Kubernetes usando CLI. Devemos usar a mesma versão que está explicita no arquivo de variáveis. Veja [variables.tf](variables.tf)
 
 1. Baixando o binário kubectl
 
@@ -120,18 +111,24 @@ kubectl version --client --output=yaml
 
 ## Autenticando na OCI
 
-1. Crie uma `API key`
+1. Antes de começar, clone o repositório.
+
+```sh
+git clone https://github.com/Rapha-Borges/oke-free.git
+```
+
+2. Crie uma `API key`
 
 - Entre no seu perfil, acesse a aba [API Keys](https://cloud.oracle.com/identity/domains/my-profile/api-keys) e clique em `Add API Key`.
 
-2. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
+3. Selecione `Generate API key pair`, faça o download da chave privada. Em seguida, clique em `Add`.
 
-3. Após o download, mova a chave para o diretório do `OCI CLI` e renomeie para `oci_api_key.pem`.
+4. Após o download, mova a chave para o diretório do `OCI CLI` e renomeie para `oci_api_key.pem`.
 
 - GNU/Linux
 
 ```
-mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
+mkdir -p ~/.oci && mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 ```
 
 - Windows
@@ -140,13 +137,13 @@ mv ~/Downloads/<nome_do_arquivo>.pem ~/.oci/oci_api_key.pem
 move C:\Users\<user>\Downloads\<nome_do_arquivo>.pem C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-4. Corrija as permissões da chave privada:
+5. Corrija as permissões da chave privada:
 
 ```
 oci setup repair-file-permissions --file <caminho_da_chave_privada>
 ```
 
-5. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo de configuração do `OCI CLI`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada.
+6. Copie o texto que apareceu na página de criação da `API KEY` para o arquivo de configuração do `OCI CLI`. Não se esqueça de substituir o valor do compo `key_file` pelo caminho da chave privada.
 
 - GNU/Linux
 
@@ -178,18 +175,18 @@ region=xxxxxxxx
 key_file=C:\Users\<user>\.oci\oci_api_key.pem
 ```
 
-6. Crie a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
+7. Crie a pasta `./ssh` e gere a chave `ssh` (No Windows, utilize o [Git Bash](https://git-scm.com/downloads) para executar o comando abaixo).
 
 ```bash
-ssh-keygen -t rsa -b 4096 -f ssh/id_rsa
+ssh-keygen -t rsa -b 4096 -f ./ssh/id_rsa
 ```
 
-7. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta.
+8. Crie o arquivo com as variáveis de ambiente, substituindo os valores das variáveis pelos valores da sua conta (o conteúdo usado no arquivo ~/.oci/config acima).
 
 - GNU/Linux
 
 ```
-vim env.sh
+vim ./env.sh
 ```
 
 ```
@@ -205,7 +202,7 @@ export TF_VAR_oci_profile="DEFAULT"
 Agora rode o script para exportar as variáveis:
 
 ```
-source env.sh
+source ./env.sh
 ```
 
 - Windows
@@ -222,38 +219,34 @@ set TF_VAR_ssh_public_key=C:\Users\<user>\.oci\ssh\id_rsa.pub
 set TF_VAR_oci_profile="DEFAULT"
 ```
 
+Agora execute o arquivo para exportar as variáveis:
+
 ```
 env.bat
 ```
 
 ## Criando o cluster
 
-1. Clone o repositório.
+1. Instale os módulos
 
 ```sh
-git clone https://github.com/Rapha-Borges/oke-free.git
+tofu init
 ```
 
-2. Inicialize o Terraform.
+2. Crie o cluster.
 
 ```sh
-terraform init
+tofu apply
 ```
 
-3. Crie o cluster.
-
-```sh
-terraform apply
-```
-
-- OBS: Opicionalmente, você pode utilizar o comando `terraform plan` para visualizar as alterações que serão realizadas antes de executar o `terraform apply`. Com os seguintes comandos:
+- OBS: Opicionalmente, você pode utilizar o comando `tofu plan` para visualizar as alterações que serão realizadas antes de executar o `tofu apply`. Com os seguintes comandos:
 
 ```
-terraform plan -out=oci.tfplan
-terraform apply "oci.tfplan" -auto-approve
+tofu plan -out=oci.tfplan
+tofu apply -auto-approve "oci.tfplan"
 ```
 
-4. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
+3. Edite o arquivo `~/.kube/config` para adicionar a autenticação com a `API KEY` conforme exemplo abaixo.
 
 ```sh
 - name: user-xxxxxxxxxx
@@ -275,7 +268,7 @@ terraform apply "oci.tfplan" -auto-approve
       - DEFAULT           # ADICIONE ESSA LINHA
 ```
 
-5. Acesse o cluster.
+4. Acesse o cluster.
 
 ```sh
 kubectl get nodes
@@ -283,9 +276,9 @@ kubectl get nodes
 
 ### Script para criação do cluster
 
-Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
+#### Atenção: O script está em fase de testes e funciona apenas no Linux.
 
-Atenção: O script está em fase de testes e funciona apenas no Linux.
+Caso queira automatizar o processo de criação do cluster, basta executar o script main.sh que está na raiz do projeto. O script irá gerar a chave SSH, adicionar a chave pública na TF_VAR, inicializar o Terraform e criar o cluster.
 
 ```sh
 ./main.sh
@@ -295,10 +288,10 @@ Atenção: O script está em fase de testes e funciona apenas no Linux.
 
 O cluster que criamos já conta com um Network Load Balancer configurado para expor uma aplicação na porta 80. Basta configurar um serviço do tipo `NodePort` com a porta `80` e a nodePort `30080`. Exemplos de como configurar o serviço podem ser encontrados no diretório `manifests`.
 
-O endereço do Load Balancer é informado na saída do Terraform, no formato `public_ip = "xxx.xxx.xxx.xxx"` e pode ser consultado a qualquer momento com o comando:
+O endereço do Load Balancer é informado na final da execução, no formato `public_ip = "xxx.xxx.xxx.xxx"` e pode ser consultado a qualquer momento com o comando:
 
 ```sh
-terraform output public_ip
+tofu output public_ip
 ```
 
 ## Deletando o cluster
@@ -306,7 +299,7 @@ terraform output public_ip
 1. Para deletar o cluster bastar executar o comando:
 
 ```sh
-terraform destroy
+tofu destroy
 ```
 
 ## Problemas conhecidos
@@ -339,7 +332,7 @@ export OCI_CLI_AUTH=security_token
 set OCI_CLI_AUTH=security_token
 ```
 
-- ### Erros devido a falha na execução do `terraform destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `terraform destroy`
+- ### Erros devido a falha na execução do `tofu destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `tofu destroy`
 
 Para resolver esse problema, basta deletar os recursos manualmente no console da OCI. Seguindo a ordem abaixo:
 
@@ -349,10 +342,10 @@ Para resolver esse problema, basta deletar os recursos manualmente no console da
 
 Obs: Caso não apareça o Cluster ou a VPN para deletar, certifique que selecionou o Compartment certo `k8s`.
 
-
-
 # Referências
 
-- [Terraform Documentation](https://www.terraform.io/docs/index.html)
+- [OpenTofu Documentation](https://opentofu.org/docs/)
 - [Terrafom Essentials](https://www.linuxtips.io/course/terraform-essentials)
 - [Free Oracle Cloud Kubernetes cluster with Terraform](https://arnoldgalovics.com/oracle-cloud-kubernetes-terraform/)
+
+## Criado por [@Raphael Borges](https://r11s.com.br/)

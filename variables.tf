@@ -32,7 +32,7 @@ variable "image_id" {
   default = "ocid1.image.oc1.iad.aaaaaaaao2zpwcb2osmbtliiuzlphc3y2fqaqmcpp5ttlcf573sidkabml7a"
 }
 # Link to a list of available images (Be sure to select the correct region and CPU architecture. We are using Oracle-Linux-8.8-aarch64-2023.09.26-0-OKE-1.28.2-653)
-# https://docs.cloud.oracle.com/iaas/images/
+# https://docs.oracle.com/en-us/iaas/images/image/d4c060a5-041c-477b-8226-2d25d91c4ffb/
 
 # ----------> Cluster <----------
 variable "k8s_version" {
@@ -42,7 +42,7 @@ variable "k8s_version" {
 
 variable "node_size" {
   type    = string
-  default = "1"
+  default = "3"
 }
 
 variable "cluster_name" {
@@ -79,7 +79,7 @@ variable "listerner_port" {
   default = 80
 }
 
-# ----------> SSH <----------
+# ----------> Auth <----------
 
 variable "ssh_public_key" {
   type    = string
@@ -98,5 +98,9 @@ variable "tenancy_ocid" {
 }
 
 variable "user_ocid" {
+  type    = string
+}
+
+variable "oci_profile" {
   type    = string
 }

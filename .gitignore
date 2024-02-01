@@ -21,3 +21,9 @@ id_rsa*
 # Ignore output shell
 output-gen*
 tfplan
+
+# file with credentials
+env.sh
+
+# Directory for sensible files and external files: i.e. env.sh / deployment.yaml
+temp
