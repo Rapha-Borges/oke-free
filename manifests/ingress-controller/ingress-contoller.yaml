@@ -1,5 +1,8 @@
-#Modified version to Oracle OCI to instanciate NLB instead LB
-#Could see this at the Service
+#Modified version to Oracle OCI to instanciate NLB instead LB to mantain always free
+#If you want to see what is changed from the normal version: add the tag  
+  #annotations:    
+    #oci.oraclecloud.com/load-balancer-type: "nlb"
+#Reference: https://kubernetes.github.io/ingress-nginx/deploy/#oracle-cloud-infrastructure
 
 apiVersion: v1
 kind: Namespace
