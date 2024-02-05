@@ -39,7 +39,7 @@ resource "oci_network_load_balancer_backend" "nlb_backend_http" {
   backend_set_name         = oci_network_load_balancer_backend_set.nlb_backend_set_http.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
   port                     = var.node_port_http
-  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set]
+  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set_http]
   count                    = var.node_size
   target_id                = data.oci_core_instances.instances.instances[count.index].id
 }
@@ -48,7 +48,7 @@ resource "oci_network_load_balancer_backend" "nlb_backend_https" {
   backend_set_name         = oci_network_load_balancer_backend_set.nlb_backend_set_https.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
   port                     = var.node_port_https
-  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set]
+  depends_on               = [oci_network_load_balancer_backend_set.nlb_backend_set_https]
   count                    = var.node_size
   target_id                = data.oci_core_instances.instances.instances[count.index].id
 }
@@ -59,7 +59,7 @@ resource "oci_network_load_balancer_listener" "nlb_listener_http" {
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
   port                     = var.listener_port_http
   protocol                 = "TCP"
-  depends_on               = [oci_network_load_balancer_backend.nlb_backend]
+  depends_on               = [oci_network_load_balancer_backend.nlb_backend_http]
 }
 
 resource "oci_network_load_balancer_listener" "nlb_listener_https" {
@@ -68,5 +68,5 @@ resource "oci_network_load_balancer_listener" "nlb_listener_https" {
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.nlb.id
   port                     = var.listener_port_https
   protocol                 = "TCP"
-  depends_on               = [oci_network_load_balancer_backend.nlb_backend]
+  depends_on               = [oci_network_load_balancer_backend.nlb_backend_https]
 }
