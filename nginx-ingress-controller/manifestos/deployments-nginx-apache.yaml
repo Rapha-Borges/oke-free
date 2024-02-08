@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: '0.2'
+            memory: 512Mi
+          requests:
+            cpu: '0.1'
+            memory: 128Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+  - port: 8080 ## porta usada pelo service
+    targetPort: 80 ## porta do pod
+  type: NodePort
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache
+spec:
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: httpd
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: '0.2'
+            memory: 512Mi
+          requests:
+            cpu: '0.1'
+            memory: 128Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache
+spec:
+  selector:
+    app: apache
+  ports:
+  - port: 8090 ## porta usada pelo service
+    targetPort: 80 ## porta do pod
+  type: NodePort
