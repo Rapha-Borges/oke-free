@@ -112,3 +112,10 @@ kubectl delete -f ./manifestos/deployments-nginx-apache.yaml
 kubectl delete -f ./manifestos/ingress-dominio-apache-nginx.yaml
 kubectl delete -f ./manifestos/ns-and-sa.yaml
 ```
+
+
+Acesse no seu navegador:
+
+http://apache.158.101.96.103.nip.io/
+
+http://nginx.158.101.96.103.nip.io/
