@@ -332,7 +332,7 @@ export OCI_CLI_AUTH=security_token
 set OCI_CLI_AUTH=security_token
 ```
 
-- ### Erros devido a falha na execução do `tofu destroy`, impossibilitando a exclusão do cluster e todos os recuros. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `tofu destroy`
+- ### Erros devido a falha na execução do `tofu destroy`, impossibilitando a exclusão do cluster e todos os recursos. Ou erros como o `Error Code: CompartmentAlreadyExists` que não são resolvidos com o `tofu destroy`
 
 Para resolver esse problema, basta deletar os recursos manualmente no console da OCI. Seguindo a ordem abaixo:
 
