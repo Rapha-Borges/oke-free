@@ -69,14 +69,24 @@ variable "load_balancer_name_space" {
   default = "loadbalancer"
 }
 
-variable "node_port" {
+variable "node_port_http" {
   type    = number
   default = 30080
 }
 
-variable "listerner_port" {
+variable "node_port_https" {
+  type    = number
+  default = 30443
+}
+
+variable "listener_port_http" {
   type    = number
   default = 80
+}
+
+variable "listener_port_https" {
+  type    = number
+  default = 443
 }
 
 # ----------> Auth <----------
