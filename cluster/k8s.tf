@@ -54,8 +54,8 @@ resource "oci_containerengine_node_pool" "k8s_node_pool" {
   }
 
   node_source_details {
-    image_id    = var.image_id
-    source_type = "image"
+    image_id  = var.image_id == "" ? element([for source in data.oci_containerengine_node_pool_option.oci_oke_node_pool_option.sources : source.image_id if length(regexall("Oracle-Linux-${var.node_linux_version}-aarch64-20[0-9]*.*", source.source_name)) > 0], 0) : var.image_id
+    source_type = "IMAGE"
   }
 
   initial_node_labels {
